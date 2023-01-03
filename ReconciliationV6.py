@@ -67,6 +67,7 @@ logging.info('Reading and Formating the statement')
 
 sdf = pd.read_fwf('./STATEMENT',header=None, widths=[13,20,15,9,32,16], index=False)
 sortdf = sdf.sort_values(0)
+val = sortdf.loc[(sortdf[1] == 'BALANCE AT PERIOD EN'), 4].iloc[0]
 df = sortdf.loc [sortdf[5].isin(['KES1020000010001'])]
 df.loc[df[4].str.endswith("-"), 4] = (
     "-" + df.loc[df[4].str.endswith("-"), 4].str.strip("- ")
@@ -178,7 +179,7 @@ logging.info('Done with recon')
 print ('Generating the Recon File')
 
 totaldebits = DDsum + CHQsum
-summarydata = [['TOTAL STATEMENT CREDITS', postivesum],['TOTAL STATEMENT DEBITS', negativesum], ['DIRECT DEBITS', DDsum], ['CHEQUES', CHQsum], ['EFTs', EFTsum], ['TOTAL DEBITS CLEARED', totaldebits]]
+summarydata = [['TOTAL STATEMENT CREDITS', postivesum],['TOTAL STATEMENT DEBITS', negativesum], ['DIRECT DEBITS', DDsum], ['CHEQUES', CHQsum], ['EFTs', EFTsum], ['TOTAL DEBITS CLEARED', totaldebits],['BALANCE AT THE END', val]]
 summarydf = pd.DataFrame (summarydata, columns=['DESCRIPTION', 'AMOUNT'])
 
 print (summarydf)
